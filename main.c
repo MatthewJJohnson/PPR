@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     {
         assert(p == omp_get_num_threads());
         int rank = omp_get_thread_num();
-        printf("Rank %d has come alive!\n", rank);
+        //printf("Rank %d has come alive!\n", rank);
     }
 
     //begin setup
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
         printf("Unable to open file.\n");
         exit(1);
     }
-    printf("Finding Max...\n");
+    //printf("Finding Max...\n");
     while(fgets(line, 64, fp) != NULL) {
         if (line[0] != '#') {//comment
             char *temp = strtok(line, " \t");
@@ -82,9 +82,9 @@ int main(int argc, char *argv[])
     }
     fclose(fp);
     maxNode = max +1;
-    printf("Last Node %d\n", maxNode);
+    //printf("Last Node %d\n", maxNode);
 
-    printf("Init AdjacencyList...\n");
+    //printf("Init AdjacencyList...\n");
     //new graph
     vertices = malloc(sizeof(int) * maxNode);
     memset(vertices, 0, sizeof(vertices));
@@ -93,13 +93,13 @@ int main(int argc, char *argv[])
     graph->nodeCount = maxNode;
     graph->list = malloc(maxNode * sizeof(AdjacencyList));
     //init walk
-    printf("Init graph...\n");
+    //printf("Init graph...\n");
     int l;
     for(l = 0; l < maxNode; l++) {
         graph->list[l].linkCount = 0;
         graph->list[l].head = NULL;
     }
-    printf("Build graph...\n");
+    //printf("Build graph...\n");
     //init Graph
     fp = fopen(file, "r");
     if (fp == NULL) {
@@ -121,14 +121,14 @@ int main(int argc, char *argv[])
     fclose(fp);
 
     printf("Running Page rank in parallel...\n");
-    for(i = 0; i < 1; i++) {
+    for(i = 0; i < 3; i++) {
         T0 = omp_get_wtime();
         PageRank(graph, vertices, p, K, D);
         T1 = omp_get_wtime() - T0;
         Taverage += T1;
     }
     TopFive(vertices, graph->nodeCount);
-    printf("Average time = %f seconds\n", Taverage/1);
+    printf("Average time = %f seconds\n", Taverage/3);
     return 0;
 }
 
