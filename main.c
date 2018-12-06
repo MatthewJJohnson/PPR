@@ -157,7 +157,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             if(result <= D) {
                 printf("Getting random node...\n");
                 int rank = omp_get_thread_num();
-                int seed = rank + 1;
+                int seed = rank +1;
                 seed = seed * index;
                 int gotoNode = rand_r(&seed) % graph->nodeCount;
                 node = graph->list[gotoNode].head;
