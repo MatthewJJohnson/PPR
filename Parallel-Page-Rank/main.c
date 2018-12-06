@@ -30,7 +30,7 @@ typedef struct drand48_data Data;
 
 int main(int argc, char *argv[])
 {
-    double D = Taverage = T0 = T1 = 0;//entered at program start as a small float
+    double D = 0, double Taverage = 0, T0 = 0, T1 = 1;//entered at program start as a small float
     int *vertices;
     int maxNode;
     char *file;
@@ -60,10 +60,10 @@ int main(int argc, char *argv[])
 
     while(fgets(line, 32, fp) != NULL) {
         if (line[0] != '#') {
-            char *temp = strtok(line, " \t");
-            x = atoi(temp);
-            temp = strtok(NULL, " \t");
-            y = atoi(temp);
+            line = strtok(line, " \t");
+            x = atoi(line);
+            line = strtok(NULL, " \t");
+            y = atoi(line);
             if (x > y) {//to greater than from
                 if(x >= max)//to greater than max
                     max = x;//max
@@ -82,22 +82,21 @@ int main(int argc, char *argv[])
     memset(vertices, 0, sizeof(vertices));
     Graph *graph = malloc(sizeof(Graph));//init root
     graph->nodeCount = maxNode+1;
-    graph->list = malloc(maxNode+1 * sizeof(AdjacencyList));
+    graph->list = malloc(numNodes * sizeof(AdjList));
     //init walk
-    i = 0;
-    for(i = 0; i < graph->nodeCount; i++) {
-        graph->list[i].linkCount = 0;
+    for(int i = 0; i < nodeCount; i++) {
+        graph->list[i].numLinks = 0;
         graph->list[i].head = NULL;
     }
 
     //init Graph
     while(fgets(line, 32, fp) != NULL) {
         if (line[0] != '#') {//commented line of file
-            char *temp = strtok(line, " \t");
+            line = strtok(line, " \t");
             x = atoi(temp);
-            temp= strtok(NULL, " \t");
+            line = strtok(NULL, " \t");
             y = atoi(temp);
-            AdjacencyNode *new = NewAdjacencyNode(y);
+            Node *new = NewAdjacencyNode(y);
             new->next = graph->list[x].head;
             graph->list[x].head = new;//attach edge
             graph->list[x].linkCount++;//increase count
@@ -107,7 +106,7 @@ int main(int argc, char *argv[])
 
     for(i = 0; i < 10; i++) {
         T0 = omp_get_wtime();
-        PageRankEstimator(graph, K, D, vertices, p);
+        PageRankEstimator(graph, K, D, vertices);
         T1 = omp_get_wtime() - T0;
         Taverage += T1;
     }
@@ -116,16 +115,16 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
+void PageRankEstimator(Graph *graph, int K, double D, int vertices[]) {
     omp_set_num_threads(p);
-    int N = graph->nodeCount;
+    int N = graph->numNodes;
     int index, localNode;
-    AdjacencyNode *node;
+    Node *node;
 
     #pragma omp parallel for schedule(static) shared(vertices, graph) private(node, localNode)
     for(index = 0; index < N; index++)
     {
-        node = graph->list[index].head;
+        node = graph->list[i].head;
         localNode = index;
         int jindex;
         for(jindex = 0; jindex < K; jindex++)
@@ -142,22 +141,22 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             if(result == 1) {
                 int rank = omp_get_thread_num();
                 int seed = rank + 1;
-                seed = seed * index;
-                int gotoNode = rand_r(&seed) % graph->nodeCount;
+                seed = seed * iterator;
+                int gotoNode = rand_r(&seed) % nodeCount;
                 node = graph->list[gotoNode].head;
                 localNode = gotoNode;
             }
             else {
-                if(graph->list[localNode].linkCount != 0) {
+                if(graph->list[localNode].numLinks != 0) {
                     int rank = omp_get_thread_num();
                     int seed = rank + 1;
-                    seed = seed * index;
-                    int rNode = rand_r(&seed) % graph->list[localNode].linkCount + 1;
-                    AdjacencyNode *nodeNeighbor = graph->list[rNode].head;
+                    seed = seed * iterator;
+                    int rNode = rand_r(&seed) % neighborCount + 1;
+                    Node *node = head;
                     int kindex;
                     for(kindex = 1; kindex < rNode; kindex++)
-                        nodeNeighbor = nodeNeighbor->next;
-                    int gotoNode = nodeNeighbor->dest;//now have rNode
+                        node = node->next;
+                    int gotoNode = node->dest;//now have rNode
                     node = graph->list[gotoNode].head;
                     localNode = gotoNode;
                 }
@@ -187,7 +186,7 @@ void TopFive(int vertices[], int N)
     printf("Printing top 5\n");
     for(i=0; i<5; i++)
     {
-        printf("%d: %d\n", i, vertices[i]);
+        printf("%d: %d\n", i, arr1[i]);
     }
 }
 
@@ -201,10 +200,10 @@ AdjacencyNode* NewAdjacencyNode(int dest)
 
 void printGraph(Graph *graph)
 {
-    int i;
-    for(i = 0; i < graph->nodeCount; i++) {
-        AdjacencyNode *node = graph->list[i].head;
+    for(int i = 0; i < graph->nodeCount; i++) {
+        Node *node = graph->list[i].head;
         printf("Node %d walks to", i);//print first node in list
+        Node *node = head;
         while(node != NULL) {
             printf(" %d.", node->dest);//print remainder in list
             node = node->next;
