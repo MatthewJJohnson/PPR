@@ -8,9 +8,6 @@
 
 //resource pages.tacc.utexas.edu/omp-loop.html iterations are independent but a regular directive
 
-AdjacencyNode* NewAdjacencyNode(int dest);
-void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p);
-
 typedef struct adjacencynode
 {
     int dest;
@@ -30,6 +27,9 @@ typedef struct graph
 }Graph;//graph of lists
 
 typedef struct drand48_data Data;
+
+AdjacencyNode* NewAdjacencyNode(int dest);
+void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p);
 
 int main(int argc, char *argv[])
 {
