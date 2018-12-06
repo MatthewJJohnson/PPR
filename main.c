@@ -188,31 +188,60 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
     }
 }
 
-void TopFive(int vertices[], int N)
-{
+void TopFive(int pageRanks [], int n) 
+{ 
     int i;
-    int j;
-    printf("Sorting vertices...\n");
-    for(i=0; i<N; i++)
-    {
-        for(j=i+1; j<N; j++)
-        {
-            if(vertices[i] < vertices[j])
-            {
-                int tmp = vertices[i];
-                vertices[i] = vertices[j];
-                vertices[j] = tmp;
-            }
+    int first, second, third, fourth, fifth; 
+    int firstIndex, secondIndex, thirdIndex, fourthIndex, fifthIndex;
+                
+    fifth = fourth = third = first = second = 0.0; 
+    firstIndex = secondIndex = thirdIndex = fourthIndex = fifthIndex = 0;                       
+    for (i = 0; i < n ; i ++) 
+    { 
+        if (pageRanks[i] > first) { 
+            fifth = fourth;
+            fifthIndex = fourthIndex;
+            fourth = third;
+            fourthIndex = thirdIndex;
+            third = second;
+            thirdIndex = secondIndex;
+            second = first;
+            secondIndex = firstIndex;
+            first = pageRanks[i];
+            firstIndex = i;
+        } else if (pageRanks[i] > second) { 
+            fifth = fourth;
+            fifthIndex = fourthIndex;
+            fourth = third;
+            fourthIndex = thirdIndex;
+            third = second; 
+            thirdIndex = secondIndex;
+            second = pageRanks[i]; 
+            secondIndex = i;
+        } else if (pageRanks[i] > third) {
+            fifth = fourth;
+            fifthIndex = fourthIndex;
+            fourth = third;
+            fourthIndex = thirdIndex;
+            third = pageRanks[i];
+            thirdIndex = i;
+        } else if (pageRanks[i] > fourth) { 
+            fifth = fourth;
+            fifthIndex = fourthIndex;
+            fourth = pageRanks[i]; 
+            fourthIndex = i;
+        } else if (pageRanks[i] > fifth) {
+            fifth = pageRanks[i];
+            fifthIndex = i;
         }
     }
-
-    i=0;
-    printf("Printing top 5\n");
-    for(i=0; i<5; i++)
-    {
-        printf("%d: %d\n", i, vertices[i]);
-    }
-}
+                            
+    printf("Node %d\t| Page Rank: %d\n", firstIndex, first);
+    printf("Node %d\t| Page Rank: %d\n", secondIndex, second);
+    printf("Node %d\t| Page Rank: %d\n", thirdIndex, third);
+    printf("Node %d\t| Page Rank: %d\n", fourthIndex, fourth);
+    printf("Node %d\t| Page Rank: %d\n", fifthIndex, fifth);
+} 
 
 AdjacencyNode* NewAdjacencyNode(int dest)
 {
