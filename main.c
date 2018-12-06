@@ -147,7 +147,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             vertices[localNode] += 1;
             double result;
             Data buf;
-            printf("Getting random coin flip...\n");
+            //printf("Getting random coin flip...\n");
             int rank = omp_get_thread_num();
             int seed = rank + 1;
             seed = seed * index;
@@ -171,11 +171,11 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
                     int rNode = rand_r(&seed) % graph->list[localNode].linkCount + 1;
                     //AdjacencyNode *nodeNeighbor = graph->list[rNode].head;
                     int kindex;
-                    printf("Walking to the random neighbor...\n");
+                    //printf("Walking to the random neighbor...\n");
                     for(kindex = 1; kindex < rNode; kindex++)
                         node = node->next;
                     int gotoNode = node->dest;//now have rNode
-                    printf("Hello neighbor.\n");
+                    printf("Hello %d.\n", K);
                     node = graph->list[gotoNode].head;
                     localNode = gotoNode;
                 }
