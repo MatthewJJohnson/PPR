@@ -29,7 +29,7 @@ typedef struct graph
 typedef struct drand48_data Data;
 
 AdjacencyNode* NewAdjacencyNode(int dest);
-void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p);
+void PageRank(Graph *graph, int vertices[], int p, int K, double D);
 void TopFive(int vertices[], int N);
 
 int main(int argc, char *argv[])
@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
     K = atoi(argv[2]);
     sscanf(argv[3], "%lf", &D);
     file = argv[4];
-    printf("P %d K %d D %f File %s\n", p, K, D, file);
 
     omp_set_num_threads(p);
     #pragma omp parallel//init parrallel
@@ -56,6 +55,7 @@ int main(int argc, char *argv[])
         printf("Rank %d & Thread %d\n", rank, omp_get_num_threads());
     }
 
+    //begin setup
     //this could be done two ways. read file then create graph, or create graph then read file.
     //if we create graph first, we can go line by line and not atempt to store things in a buffer.
     fp = fopen(file, "r");
@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
             x = atoi(temp);
             temp = strtok(NULL, " \t");
             y = atoi(temp);
+            //not optimized, not timed
             if (x > y) {//to greater than from
                 if(x >= max)//to greater than max
                     max = x;//max
@@ -122,7 +123,7 @@ int main(int argc, char *argv[])
     printf("Running Page rank in parallel...\n");
     for(i = 0; i < 1; i++) {
         T0 = omp_get_wtime();
-        PageRankEstimator(graph, K, D, vertices, p);
+        PageRank(graph, vertices, p, K, D);
         T1 = omp_get_wtime() - T0;
         Taverage += T1;
     }
@@ -131,70 +132,63 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
+void PageRank(Graph *graph, int vertices[], int p, int K, double D) {
     omp_set_num_threads(p);
     int N = graph->nodeCount;
     int index, localNode;
     AdjacencyNode *node;
 
     #pragma omp parallel for schedule(static) shared(vertices, graph) private(node, localNode)
-    for(index = 0; index < N; index++)
+    for(index = 0; index < N; index++)//I,J,K
     {
-        node = graph->list[index].head;
         localNode = index;
+        node = graph->list[index].head;
         int jindex;
-        //printf("Index %d\n", index);
         for(jindex = 0; jindex < K; jindex++)
         {
             #pragma omp atomic
             vertices[localNode] += 1;
             double result;
             Data buf;
-            //printf("Getting random coin flip...\n");
             int rank = omp_get_thread_num();
             int seed = rank + 1;
             seed = seed * index;
             srand48_r(time(NULL) + seed, &buf);
             drand48_r(&buf, &result);
-            //printf("Result %f\n", result);
             if(result <= D) {
-                //printf("Getting random node...\n");
                 int rank = omp_get_thread_num();
                 int seed = rank +1;
                 seed = seed * index;
                 int gotoNode = rand_r(&seed) % N;
-                node = graph->list[gotoNode].head;
                 localNode = gotoNode;
+                node = graph->list[gotoNode].head;
             }
             else {
                 if(graph->list[localNode].linkCount != 0) {
-                    //printf("Getting random neighboring node...\n");
                     int rank = omp_get_thread_num();
                     int seed = rank + 1;
                     seed = seed * index;
                     int rNode = rand_r(&seed) % graph->list[localNode].linkCount + 1;
-                    //AdjacencyNode *nodeNeighbor = graph->list[rNode].head;
                     int kindex;
-                    //printf("Walking to the random neighbor...\n");
-                    for(kindex = 1; kindex < rNode; kindex++)
+                    for(kindex = 1; kindex < rNode; kindex++){
                         node = node->next;
+                    }
                     int gotoNode = node->dest;//now have rNode
-                    //printf("Hello %d.\n", jindex);
+                    localNode = gotoNode;                    
                     node = graph->list[gotoNode].head;
-                    localNode = gotoNode;
                 }
             }
         }
     }
 }
 
-void TopFive(int pageRanks [], int n) 
+void TopFive(int vertices[], int N) 
 { 
+    //SUUUUUUUUUUUUPER not optimized, not timed
     int *indexes;
- 
-    indexes = (int*) malloc(n * sizeof(int));  //memory allocated using malloc
+    indexes = (int*) malloc(N * sizeof(int));  //memory allocated using malloc
     int i;
-    for(i = 0; i < n; i++)
+    for(i = 0; i < N; i++)
     {
         indexes[i] = i;
     }
@@ -206,23 +200,22 @@ void TopFive(int pageRanks [], int n)
     for (i = 0; i < k; i++)
     {
         max = i;
-        for (j = i+1; j < n; j++)
+        for (j = i+1; j < N; j++)
         {
-            if (pageRanks[j] > pageRanks[max])  {
+            if (vertices[j] > vertices[max])  {
                 max = j;
             }
         }
-        // Swap numbers in input array
-        temp = pageRanks[i];
-        pageRanks[i] = pageRanks[max];
-        pageRanks[max] = temp;
+        temp = vertices[i];
+        vertices[i] = vertices[max];
+        vertices[max] = temp;
         temp = indexes[i];
         indexes[i] = indexes[max];
-        indexes[max] = temp;
+        indexes[max] = temp;//capture original indice
     }
 
     for (i = 0; i < k; i++) {
-        printf("Node %d has page rank %d\n", indexes[i], pageRanks[i]);
+        printf("Node %d has page rank %d\n", indexes[i], vertices[i]);
     }
 } 
 
@@ -232,18 +225,4 @@ AdjacencyNode* NewAdjacencyNode(int dest)
     new->dest = dest;
     new->next = NULL;
     return new;
-}
-
-void printGraph(Graph *graph)
-{
-    int i;
-    for(i = 0; i < graph->nodeCount; i++) {
-        AdjacencyNode *node = graph->list[i].head;
-        printf("Node %d walks to", i);//print first node in list
-        while(node != NULL) {
-            printf(" %d.", node->dest);//print remainder in list
-            node = node->next;
-        }
-        printf("Nowhere\n");
-    }
 }
