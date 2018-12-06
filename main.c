@@ -140,18 +140,21 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
         node = graph->list[index].head;
         localNode = index;
         int jindex;
+        printf("Performing new index setup...\n");
         for(jindex = 0; jindex < K; jindex++)
         {
             #pragma omp atomic
             vertices[localNode] += 1;
             double result;
             Data buf;
+            printf("Getting random coin flip...\n");
             int rank = omp_get_thread_num();
             int seed = rank + 1;
             seed = seed * index;
             srand48_r(time(NULL) + seed, &buf);
             drand48_r(&buf, &result);
             if(result == 1) {
+                printf("Getting random node...\n");
                 int rank = omp_get_thread_num();
                 int seed = rank + 1;
                 seed = seed * index;
@@ -161,15 +164,18 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             }
             else {
                 if(graph->list[localNode].linkCount != 0) {
+                    printf("Getting random neighboring node...\n");
                     int rank = omp_get_thread_num();
                     int seed = rank + 1;
                     seed = seed * index;
                     int rNode = rand_r(&seed) % graph->list[localNode].linkCount + 1;
                     AdjacencyNode *nodeNeighbor = graph->list[rNode].head;
                     int kindex;
+                    printf("Walking to the random neighbor...\n");
                     for(kindex = 1; kindex < rNode; kindex++)
                         nodeNeighbor = nodeNeighbor->next;
                     int gotoNode = nodeNeighbor->dest;//now have rNode
+                    printf("Hello neighbor.\n");
                     node = graph->list[gotoNode].head;
                     localNode = gotoNode;
                 }
@@ -182,6 +188,7 @@ void TopFive(int vertices[], int N)
 {
     int i;
     int j;
+    printf("Sorting vertices...\n");
     for(i=0; i<N; i++)
     {
         for(j=i+1; j<N; j++)
