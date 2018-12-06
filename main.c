@@ -30,6 +30,7 @@ typedef struct drand48_data Data;
 
 AdjacencyNode* NewAdjacencyNode(int dest);
 void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p);
+void TopFive(int vertices[], int N);
 
 int main(int argc, char *argv[])
 {
