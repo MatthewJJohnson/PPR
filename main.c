@@ -30,7 +30,7 @@ typedef struct drand48_data Data;
 
 int main(int argc, char *argv[])
 {
-    double D = Taverage = T0 = T1 = 0;//entered at program start as a small float
+    double D, Taverage, T0, T1 = 0;//entered at program start as a small float
     int *vertices;
     int maxNode;
     char *file;
@@ -136,7 +136,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             Data buf;
             int rank = omp_get_thread_num();
             int seed = rank + 1;
-            seed = seed * i;
+            seed = seed * index;
             srand48_r(time(NULL) + seed, &buf);
             drand48_r(&buf, &result);
             if(result == 1) {
