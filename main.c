@@ -175,7 +175,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
                     for(kindex = 1; kindex < rNode; kindex++)
                         node = node->next;
                     int gotoNode = node->dest;//now have rNode
-                    printf("Hello %d.\n", K);
+                    printf("Hello %d.\n", jindex);
                     node = graph->list[gotoNode].head;
                     localNode = gotoNode;
                 }
