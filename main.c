@@ -6,8 +6,6 @@
 #include <assert.h>
 #include <string.h>
 
-//resource pages.tacc.utexas.edu/omp-loop.html iterations are independent but a regular directive
-
 typedef struct adjacencynode
 {
     int dest;
@@ -34,7 +32,7 @@ void TopFive(int vertices[], int N);
 
 int main(int argc, char *argv[])
 {
-    double D, Taverage, T0, T1 = 0;//entered at program start as a small float
+    double D, T0, T1 = 0;//entered at program start as a small float
     int *vertices;
     int maxNode;
     char *file;
@@ -121,14 +119,11 @@ int main(int argc, char *argv[])
     fclose(fp);
 
     printf("Running Page rank in parallel...\n");
-    for(i = 0; i < 3; i++) {
-        T0 = omp_get_wtime();
-        PageRank(graph, vertices, p, K, D);
-        T1 = omp_get_wtime() - T0;
-        Taverage += T1;
-    }
+    T0 = omp_get_wtime();
+    PageRank(graph, vertices, p, K, D);
+    T1 = omp_get_wtime() - T0;
     TopFive(vertices, graph->nodeCount);
-    printf("Average time = %f seconds\n", Taverage/3);
+    printf("Time = %f seconds\n", T1);
     return 0;
 }
 
