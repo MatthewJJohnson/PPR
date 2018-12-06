@@ -97,6 +97,11 @@ int main(int argc, char *argv[])
     }
     printf("Build graph...\n");
     //init Graph
+    fp = fopen(file, "r");
+    if (fp == NULL) {
+        printf("Unable to open file.\n");
+        exit(1);
+    }
     while(fgets(line, 64, fp) != NULL) {
         if (line[0] != '#') {//commented line of file
             char *temp = strtok(line, " \t");
