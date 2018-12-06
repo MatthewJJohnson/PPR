@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     //init walk
     printf("Init graph...\n");
     int l;
-    for(l = 0; l < graph->maxNode+1; l++) {
+    for(l = 0; l < maxNode+1; l++) {
         graph->list[l].linkCount = 0;
         graph->list[l].head = NULL;
     }
