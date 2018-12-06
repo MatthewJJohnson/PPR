@@ -80,14 +80,16 @@ int main(int argc, char *argv[])
     maxNode = max;
     printf("Last Node %d\n", maxNode);
 
-    printf("Init graph...\n");
+    printf("Init AdjacencyList...\n");
     //new graph
     vertices = malloc(sizeof(int) * maxNode +1);
     memset(vertices, 0, sizeof(vertices));
+    printf("Init graph root...\n");
     Graph *graph = malloc(sizeof(Graph));//init root
     graph->nodeCount = maxNode+1;
     graph->list = malloc(maxNode+1 * sizeof(AdjacencyList));
     //init walk
+    printf("Init graph...\n");
     i = 0;
     for(i = 0; i < graph->nodeCount; i++) {
         graph->list[i].linkCount = 0;
