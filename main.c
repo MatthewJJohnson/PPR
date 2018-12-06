@@ -117,14 +117,14 @@ int main(int argc, char *argv[])
     fclose(fp);
 
     printf("Running Page rank in parallel...\n");
-    for(i = 0; i < 10; i++) {
+    for(i = 0; i < 1; i++) {
         T0 = omp_get_wtime();
         PageRankEstimator(graph, K, D, vertices, p);
         T1 = omp_get_wtime() - T0;
         Taverage += T1;
     }
 
-    printf("Average time = %f seconds\n", Taverage/10.0);
+    printf("Average time = %f seconds\n", Taverage/1);
     return 0;
 }
 
@@ -159,7 +159,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
                 int rank = omp_get_thread_num();
                 int seed = rank +1;
                 seed = seed * index;
-                int gotoNode = rand_r(&seed) % graph->nodeCount;
+                int gotoNode = rand_r(&seed) % N;
                 node = graph->list[gotoNode].head;
                 localNode = gotoNode;
             }
