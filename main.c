@@ -90,10 +90,10 @@ int main(int argc, char *argv[])
     graph->list = malloc(maxNode+1 * sizeof(AdjacencyList));
     //init walk
     printf("Init graph...\n");
-    i = 0;
-    for(i = 0; i < graph->nodeCount; i++) {
-        graph->list[i].linkCount = 0;
-        graph->list[i].head = NULL;
+    int l;
+    for(l = 0; l < graph->maxNode+1; l++) {
+        graph->list[l].linkCount = 0;
+        graph->list[l].head = NULL;
     }
     printf("Build graph...\n");
     //init Graph
