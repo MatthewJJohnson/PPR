@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
     maxNode = max;
     printf("Last Node %d\n", maxNode);
 
+    printf("Init graph...\n");
     //new graph
     vertices = malloc(sizeof(int) * maxNode +1);
     memset(vertices, 0, sizeof(vertices));
@@ -92,9 +93,9 @@ int main(int argc, char *argv[])
         graph->list[i].linkCount = 0;
         graph->list[i].head = NULL;
     }
-
+    printf("Build graph...\n");
     //init Graph
-    while(fgets(line, 32, fp) != NULL) {
+    while(fgets(line, 64, fp) != NULL) {
         if (line[0] != '#') {//commented line of file
             char *temp = strtok(line, " \t");
             x = atoi(temp);
@@ -108,6 +109,7 @@ int main(int argc, char *argv[])
     }
     fclose(fp);
 
+    printf("Running Page rank in parallel...\n");
     for(i = 0; i < 10; i++) {
         T0 = omp_get_wtime();
         PageRankEstimator(graph, K, D, vertices, p);
