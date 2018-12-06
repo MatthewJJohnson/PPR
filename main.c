@@ -153,7 +153,8 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             seed = seed * index;
             srand48_r(time(NULL) + seed, &buf);
             drand48_r(&buf, &result);
-            if(result == 1) {
+            
+            if(result <= D) {
                 printf("Getting random node...\n");
                 int rank = omp_get_thread_num();
                 int seed = rank + 1;
