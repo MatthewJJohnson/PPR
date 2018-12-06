@@ -222,60 +222,8 @@ void TopFive(int pageRanks [], int n)
     }
 
     for (i = 0; i < k; i++) {
-        printf("%d -> %d\n", indexes[i], pageRanks[i]);
+        printf("Node %d has page rank %d\n", indexes[i], pageRanks[i]);
     }
-
-    //int i;
-    int first, second, third, fourth, fifth; 
-    int firstIndex, secondIndex, thirdIndex, fourthIndex, fifthIndex;
-                
-    fifth = fourth = third = first = second = 0.0; 
-    firstIndex = secondIndex = thirdIndex = fourthIndex = fifthIndex = 0;                       
-    for (i = 0; i < n ; i ++) 
-    { 
-        if (pageRanks[i] > first) { 
-            fifth = fourth;
-            fifthIndex = fourthIndex;
-            fourth = third;
-            fourthIndex = thirdIndex;
-            third = second;
-            thirdIndex = secondIndex;
-            second = first;
-            secondIndex = firstIndex;
-            first = pageRanks[i];
-            firstIndex = i;
-        } else if (pageRanks[i] > second) { 
-            fifth = fourth;
-            fifthIndex = fourthIndex;
-            fourth = third;
-            fourthIndex = thirdIndex;
-            third = second; 
-            thirdIndex = secondIndex;
-            second = pageRanks[i]; 
-            secondIndex = i;
-        } else if (pageRanks[i] > third) {
-            fifth = fourth;
-            fifthIndex = fourthIndex;
-            fourth = third;
-            fourthIndex = thirdIndex;
-            third = pageRanks[i];
-            thirdIndex = i;
-        } else if (pageRanks[i] > fourth) { 
-            fifth = fourth;
-            fifthIndex = fourthIndex;
-            fourth = pageRanks[i]; 
-            fourthIndex = i;
-        } else if (pageRanks[i] > fifth) {
-            fifth = pageRanks[i];
-            fifthIndex = i;
-        }
-    }
-                            
-    printf("Node %d\t| Page Rank: %d\n", firstIndex, first);
-    printf("Node %d\t| Page Rank: %d\n", secondIndex, second);
-    printf("Node %d\t| Page Rank: %d\n", thirdIndex, third);
-    printf("Node %d\t| Page Rank: %d\n", fourthIndex, fourth);
-    printf("Node %d\t| Page Rank: %d\n", fifthIndex, fifth);
 } 
 
 AdjacencyNode* NewAdjacencyNode(int dest)
