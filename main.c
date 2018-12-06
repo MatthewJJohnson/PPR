@@ -77,21 +77,21 @@ int main(int argc, char *argv[])
         }
     }
     fclose(fp);
-    maxNode = max;
+    maxNode = max +1;
     printf("Last Node %d\n", maxNode);
 
     printf("Init AdjacencyList...\n");
     //new graph
-    vertices = malloc(sizeof(int) * maxNode +1);
+    vertices = malloc(sizeof(int) * maxNode);
     memset(vertices, 0, sizeof(vertices));
     printf("Init graph root...\n");
     Graph *graph = malloc(sizeof(Graph));//init root
-    graph->nodeCount = maxNode+1;
-    graph->list = malloc(maxNode+1 * sizeof(AdjacencyList));
+    graph->nodeCount = maxNode;
+    graph->list = malloc(maxNode * sizeof(AdjacencyList));
     //init walk
     printf("Init graph...\n");
     int l;
-    for(l = 0; l < maxNode+1; l++) {
+    for(l = 0; l < maxNode; l++) {
         graph->list[l].linkCount = 0;
         graph->list[l].head = NULL;
     }
