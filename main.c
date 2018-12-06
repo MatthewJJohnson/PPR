@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     {
         assert(p == omp_get_num_threads());
         int rank = omp_get_thread_num();
-        printf("Rank %d & Thread %d\n", rank, omp_get_num_threads());
+        printf("Rank %d has come alive!\n", rank);
     }
 
     //begin setup
@@ -133,12 +133,11 @@ int main(int argc, char *argv[])
 }
 
 void PageRank(Graph *graph, int vertices[], int p, int K, double D) {
-    omp_set_num_threads(p);
     int N = graph->nodeCount;
     int index, localNode;
     AdjacencyNode *node;
 
-    #pragma omp parallel for schedule(static) shared(vertices, graph) private(node, localNode)
+    #pragma omp parallel for schedule(static) private(node, localNode) shared(vertices, graph)
     for(index = 0; index < N; index++)//I,J,K
     {
         localNode = index;
