@@ -140,7 +140,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
         node = graph->list[index].head;
         localNode = index;
         int jindex;
-        printf("Performing new index setup...\n");
+        printf("Index %d\n", index);
         for(jindex = 0; jindex < K; jindex++)
         {
             #pragma omp atomic
@@ -153,7 +153,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             seed = seed * index;
             srand48_r(time(NULL) + seed, &buf);
             drand48_r(&buf, &result);
-            
+            printf("Result %f\n", result);
             if(result <= D) {
                 printf("Getting random node...\n");
                 int rank = omp_get_thread_num();
