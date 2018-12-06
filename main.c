@@ -8,6 +8,9 @@
 
 //resource pages.tacc.utexas.edu/omp-loop.html iterations are independent but a regular directive
 
+AdjacencyNode* NewAdjacencyNode(int dest);
+void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p);
+
 typedef struct adjacencynode
 {
     int dest;
