@@ -143,7 +143,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
         node = graph->list[index].head;
         localNode = index;
         int jindex;
-        printf("Index %d\n", index);
+        //printf("Index %d\n", index);
         for(jindex = 0; jindex < K; jindex++)
         {
             #pragma omp atomic
@@ -156,9 +156,9 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             seed = seed * index;
             srand48_r(time(NULL) + seed, &buf);
             drand48_r(&buf, &result);
-            printf("Result %f\n", result);
+            //printf("Result %f\n", result);
             if(result <= D) {
-                printf("Getting random node...\n");
+                //printf("Getting random node...\n");
                 int rank = omp_get_thread_num();
                 int seed = rank +1;
                 seed = seed * index;
@@ -168,7 +168,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
             }
             else {
                 if(graph->list[localNode].linkCount != 0) {
-                    printf("Getting random neighboring node...\n");
+                    //printf("Getting random neighboring node...\n");
                     int rank = omp_get_thread_num();
                     int seed = rank + 1;
                     seed = seed * index;
@@ -179,7 +179,7 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
                     for(kindex = 1; kindex < rNode; kindex++)
                         node = node->next;
                     int gotoNode = node->dest;//now have rNode
-                    printf("Hello %d.\n", jindex);
+                    //printf("Hello %d.\n", jindex);
                     node = graph->list[gotoNode].head;
                     localNode = gotoNode;
                 }
