@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     int maxNode;
     char *file;
     int p,i,max,x,y, K = 0;
-    char line[32];
+    char line[64];
     FILE *fp;
 
     p = atoi(argv[1]);
@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
         exit(1);
     }
     printf("Finding Max...\n");
-    while(fgets(line, 32, fp) != NULL) {
-        if (line[0] != '#') {
+    while(fgets(line, 64, fp) != NULL) {
+        if (line[0] != '#') {//comment
             char *temp = strtok(line, " \t");
             x = atoi(temp);
             temp = strtok(NULL, " \t");
