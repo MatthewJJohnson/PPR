@@ -221,7 +221,7 @@ void TopFive(int pageRanks [], int n)
     }
 
     for (i = 0; i < k; i++) {
-        printf("%d -> %d\n", indexes[i], numbers[i]);
+        printf("%d -> %d\n", indexes[i], pageRanks[i]);
     }
 
     //int i;
