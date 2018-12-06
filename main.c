@@ -190,7 +190,41 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
 
 void TopFive(int pageRanks [], int n) 
 { 
-    int i;
+    int *indexes;
+ 
+    indexes = (int*) malloc(n * sizeof(int));  //memory allocated using malloc
+    for(i = 0; i < n; i++)
+    {
+        indexes[i] = i;
+    }
+
+    int k = 5;
+    int i, j;
+    int max, temp;
+    // Partial selection sort, move k elements to front
+    for (i = 0; i < k; i++)
+    {
+        max = i;
+        for (j = i+1; j < n; j++)
+        {
+            if (pageRanks[j] > pageRanks[max])  {
+                max = j;
+            }
+        }
+        // Swap numbers in input array
+        temp = pageRanks[i];
+        pageRanks[i] = pageRanks[max];
+        pageRanks[max] = temp;
+        temp = indexes[i];
+        indexes[i] = indexes[max];
+        indexes[max] = temp;
+    }
+
+    for (i = 0; i < k; i++) {
+        printf("%d -> %d\n", indexes[i], numbers[i]);
+    }
+
+    //int i;
     int first, second, third, fourth, fifth; 
     int firstIndex, secondIndex, thirdIndex, fourthIndex, fifthIndex;
                 
