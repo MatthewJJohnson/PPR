@@ -42,6 +42,11 @@ int main(int argc, char *argv[])
     FILE *fp;
 
     p = atoi(argv[1]);
+    K = atoi(argv[2]);
+    sscanf(argv[3], "%lf", &D);
+    file = argv[4];
+    printf("P %d K %d D %f File %s\n", p, K, D, file);
+
     omp_set_num_threads(p);
     #pragma omp parallel//init parrallel
     {
@@ -49,10 +54,7 @@ int main(int argc, char *argv[])
         int rank = omp_get_thread_num();
         printf("Rank %d & Thread %d\n", rank, omp_get_num_threads());
     }
-    K = atoi(argv[2]);
-    sscanf(argv[3], "%lf", &D);
-    file = argv[4];
-    printf("P %d K %d D %f File %s\n", p, K, D, file);
+
     //this could be done two ways. read file then create graph, or create graph then read file.
     //if we create graph first, we can go line by line and not atempt to store things in a buffer.
     fp = fopen(file, "r");
@@ -123,7 +125,7 @@ int main(int argc, char *argv[])
         T1 = omp_get_wtime() - T0;
         Taverage += T1;
     }
-
+    TopFive(vertices, graph->nodeCount);
     printf("Average time = %f seconds\n", Taverage/1);
     return 0;
 }
