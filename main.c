@@ -193,13 +193,14 @@ void TopFive(int pageRanks [], int n)
     int *indexes;
  
     indexes = (int*) malloc(n * sizeof(int));  //memory allocated using malloc
+    int i;
     for(i = 0; i < n; i++)
     {
         indexes[i] = i;
     }
 
     int k = 5;
-    int i, j;
+    int j;
     int max, temp;
     // Partial selection sort, move k elements to front
     for (i = 0; i < k; i++)
