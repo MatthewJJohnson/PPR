@@ -169,12 +169,12 @@ void PageRankEstimator(Graph *graph, int K, double D, int vertices[], int p) {
                     int seed = rank + 1;
                     seed = seed * index;
                     int rNode = rand_r(&seed) % graph->list[localNode].linkCount + 1;
-                    AdjacencyNode *nodeNeighbor = graph->list[rNode].head;
+                    //AdjacencyNode *nodeNeighbor = graph->list[rNode].head;
                     int kindex;
                     printf("Walking to the random neighbor...\n");
                     for(kindex = 1; kindex < rNode; kindex++)
-                        nodeNeighbor = nodeNeighbor->next;
-                    int gotoNode = nodeNeighbor->dest;//now have rNode
+                        node = node->next;
+                    int gotoNode = node->dest;//now have rNode
                     printf("Hello neighbor.\n");
                     node = graph->list[gotoNode].head;
                     localNode = gotoNode;
