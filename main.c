@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         printf("Unable to open file.\n");
         exit(1);
     }
-
+    printf("Finding Max...\n");
     while(fgets(line, 32, fp) != NULL) {
         if (line[0] != '#') {
             char *temp = strtok(line, " \t");
